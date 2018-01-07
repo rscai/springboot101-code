@@ -1,8 +1,12 @@
 package io.github.rscai.springboot101.web;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,5 +55,47 @@ public class CommentTest {
         .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(comment)))
         .andExpect(status().isCreated()).andExpect(jsonPath("$.content", is("comment content")))
         .andExpect(jsonPath("$.createdAt", notNullValue()));
+  }
+
+  @Test
+  public void testUpdate() throws Exception {
+    final long postId = 1234;
+    final long commentId = 123456;
+
+    final Comment comment = new Comment();
+    comment.setId(commentId);
+    comment.setContent("content of comment");
+    comment.setPostId(postId);
+
+    mvc.perform(put(ENDPOINT + "/{commentId}", postId, commentId).accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(comment)))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.content", is("content of comment")));
+
+  }
+
+  @Test
+  public void testDelete() throws Exception {
+    final long postId = 1234;
+    final long commentId = 123456;
+
+    mvc.perform(delete(ENDPOINT + "/{commentId}", postId, commentId)).andExpect(status().isOk());
+  }
+
+  @Test
+  public void testGetOne() throws Exception {
+    final long postId = 1234;
+    final long commentId = 123456;
+
+    mvc.perform(
+        get(ENDPOINT + "/{commentId}", postId, commentId).accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.content", is("comment content")));
+  }
+
+  @Test
+  public void testGetAll() throws Exception {
+    final long postId = 1234;
+
+    mvc.perform(get(ENDPOINT, postId).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)));
   }
 }

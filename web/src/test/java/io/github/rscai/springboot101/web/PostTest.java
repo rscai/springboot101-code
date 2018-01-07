@@ -1,7 +1,10 @@
 package io.github.rscai.springboot101.web;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -65,6 +68,27 @@ public class PostTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(mapper.writeValueAsString(post))).andExpect(status().isOk()).andDo(print())
         .andExpect(jsonPath("$.content", is("new content")));
+  }
+
+  @Test
+  public void testDelete() throws Exception {
+    final long postId = 1234;
+
+    mvc.perform(delete(ENDPOINT + "/{id}", postId)).andExpect(status().isOk());
+  }
+
+  @Test
+  public void testGetOne() throws Exception {
+    final long postId = 1234;
+    mvc.perform(get(ENDPOINT + "/{id}", postId).accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(1234))).andExpect(jsonPath("$.createdAt", notNullValue()));
+  }
+
+  @Test
+  public void testGetAll() throws Exception {
+    mvc.perform(get(ENDPOINT).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)));
   }
 
 }
