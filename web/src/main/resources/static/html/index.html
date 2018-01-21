@@ -1,0 +1,39 @@
+<html>
+<head>
+  <title>Spring MVC Demo</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/js/index.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Home</a>
+      </li>
+    </ul>
+  </div>
+  <div id="postList"></div>
+  <!-- div class="row">
+    <div class="card col-12">
+      <div class="card-body">
+        <h5 class="card-title">Created At:</h5>
+        <p>This is some text within a card body.</p>
+        <a href="/html/post.html?" class="btn btn-primary">Details</a>
+      </div>
+    </div>
+  </div -->
+  <div class="row">
+    <form id="createPostForm" class="col-12">
+      <div class="form-group">
+        <label for="content">New Post</label>
+        <textarea  class="form-control" id="content" aria-describedby="emailHelp" placeholder="Enter content"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  </div>
+</body>
+</html>
